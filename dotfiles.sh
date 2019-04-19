@@ -18,5 +18,6 @@ echo -e "\033[1mChecking out config files"
 config checkout
 config config status.showUntrackedFiles no
 touch .config-backup/uninstall.sh
-echo "mv ~/.config-backup/* ~/; rm ~/.config-backup" >> ~/.config-backup/uninstall.sh
+echo "mv ~/.config-backup/* ~/; rm -rf ~/.config-backup" >> ~/.config-backup/uninstall.sh
+chmod +x ~/.config-backup/uninstall.sh
 echo -e "\033[1;31m All done \033[0m"
