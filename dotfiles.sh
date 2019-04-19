@@ -1,5 +1,5 @@
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-if [ -f ~/.cfg ]; then
+if [ -e ~/.cfg ]; then
     echo "Move .cfg file somewhere safe and try again"
     exit 0
 fi
