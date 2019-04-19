@@ -11,6 +11,10 @@ if [ $? = 0 ]; then
   else
     echo -e "\033[1mBacking up pre-existing dot files."
     config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mkdir -p .config-backup/{}
+    for file in ~/.config-backup/.*
+    do
+      rmdir "$file" > /dev/null 2>&1
+    done
     config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} .config-backup/{}
     echo -e "\033[1mDone backing up"
 fi;
