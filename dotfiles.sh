@@ -30,4 +30,6 @@ cp -a ~/.config-backup/.* ~/ > /dev/null 2>&1
 rm -rf ~/.config-backup
 rm ~/uninstall.sh' >> ~/.config-backup/uninstall.sh
 chmod +x ~/.config-backup/uninstall.sh
+echo 'copying fonts'
+mv ~/.MesloFonts.otf ~/Library/Fonts/MesloLGLDZRegularNerdFontComplete.otf
 echo -e "\033[1;31m All done \033[0m"
