@@ -3,6 +3,13 @@ if [ -e ~/.cfg ]; then
     echo "Move .cfg file somewhere safe and try again"
     exit 0
 fi
+which -s brew
+if [[ $? != 0 ]] ; then
+    echo -ne '\n' | ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+else
+    brew update
+fi
+brew install ctags git neovim the_silver_searcher
 git clone --bare https://github.com/Nader-gator/dotfiles.git $HOME/.cfg
 function config {
    /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME $@
