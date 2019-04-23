@@ -9,7 +9,7 @@ if [[ $? != 0 ]] ; then
 else
     brew update
 fi
-brew install ctags git neovim the_silver_searcher
+brew install ctags git neovim the_silver_searcher vim
 git clone --bare https://github.com/Nader-gator/dotfiles.git $HOME/.cfg
 function config {
    /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME $@
