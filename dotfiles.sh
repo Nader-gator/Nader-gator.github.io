@@ -1,23 +1,47 @@
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-if [ -e ~/.cfg ]; then
-    echo "Move .cfg file somewhere safe and try again"
-    exit 0
-fi
-which -s brew
-if [[ $? != 0 ]] ; then
-    echo -ne '\n' | ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+#!/bin/bash
+install_homebrew(){
+    unameOut="$(uname -s)"
+    case "${unameOut}" in
+        Linux*)     machine=Linux;;
+        Darwin*)    machine=Mac;;
+        *)          machine=UNKNOWN;;
+    esac
+    case $machine in
+        Mac) echo "installing homebrew for mac";
+            mkdir homebrew && \
+            curl -L https://github.com/Homebrew/brew/tarball/master \
+            | tar xz --strip 1 -C homebrew;;
+        Linux) echo "installing homebrew for linux";
+            sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
+            test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)";
+            test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)";
+            test -r ~/.bash_profile && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.bash_profile;
+            echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.profile;;
+    esac
+    echo "homebrew installed!"
+}
+
+PCKG_MNGR=$1
+if [ -x "$(command -v "$PCKG_MNGR")" ] ; then
+    echo "$PCKG_MNGR was found"
 else
-    brew update
+    while true; do
+        read -r -p "$PCKG_MNGR not found, do you want brew? (y/n)" yn
+        case $yn in
+            [Yy] ) install_homebrew;PCKG_MNGR=brew;break;;
+            [Nn] ) echo "bye!";exit 1;;
+            * ) echo "give me a real answer"
+        esac
+    done
 fi
-brew install ctags git neovim the_silver_searcher vim
-git clone --bare https://github.com/Nader-gator/dotfiles.git $HOME/.cfg
+PCKG_MNGR install ctags git neovim the_silver_searcher vim
+git clone --bare https://github.com/Nader-gator/dotfiles.git "$HOME"/.cfg
 function config {
-   /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME $@
+   /usr/bin/git --git-dir="$HOME"/.cfg/ --work-tree="$HOME" "$@"
 }
 mkdir -p .config-backup
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-config checkout
-if [ $? = 0 ]; then
+if config checkout; then
   echo "Checked out config.";
   else
     echo -e "\033[1mBacking up pre-existing dot files."
