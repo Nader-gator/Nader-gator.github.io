@@ -34,9 +34,10 @@ else
         esac
     done
 fi
-PCKG_MNGR install ctags git neovim the_silver_searcher vim
+
+$PCKG_MNGR install ctags git neovim the_silver_searcher vim
 git clone --bare https://github.com/Nader-gator/dotfiles.git "$HOME"/.cfg
-function config {
+config() {
    /usr/bin/git --git-dir="$HOME"/.cfg/ --work-tree="$HOME" "$@"
 }
 mkdir -p .config-backup
@@ -54,13 +55,13 @@ echo -e "\033[1mChecking out config files"
 config checkout
 config config status.showUntrackedFiles no
 touch .config-backup/uninstall.sh
-echo 'for file in ~/.config-backup/.*
+echo "for file in ~/.config-backup/.*
 do rm -rf ~/${file##*/} > /dev/null 2>&1
 done
 cp -a ~/.config-backup/.* ~/ > /dev/null 2>&1
 rm -rf ~/.config-backup
 rm ~/uninstall.sh' >> ~/.config-backup/uninstall.sh
 chmod +x ~/.config-backup/uninstall.sh
-echo 'copying fonts'
+echo 'copying fonts"
 mv ~/.MesloFonts.otf ~/Library/Fonts/MesloLGLDZRegularNerdFontComplete.otf
 echo -e "\033[1;31m All done \033[0m"
