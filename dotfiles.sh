@@ -1,11 +1,16 @@
 #!/bin/bash
-install_homebrew(){
+
+get_machine(){
     unameOut="$(uname -s)"
     case "${unameOut}" in
         Linux*)     machine=Linux;;
         Darwin*)    machine=Mac;;
         *)          machine=UNKNOWN;;
     esac
+    return $machine
+}
+install_homebrew(){
+    machine=$(get_machine)
     case $machine in
         Mac) echo "installing homebrew for mac";
             mkdir homebrew && \
@@ -34,8 +39,12 @@ else
         esac
     done
 fi
+case $machine in
+    Mac)silver_searcher=the_silver_searcher;;
+    Linux)silver_searcher=silver_searcher;;
+esac
 
-$PCKG_MNGR install ctags git neovim the_silver_searcher vim
+$PCKG_MNGR install ctags git neovim $silver_searcher vim
 git clone --bare https://github.com/Nader-gator/dotfiles.git "$HOME"/.cfg
 config() {
    /usr/bin/git --git-dir="$HOME"/.cfg/ --work-tree="$HOME" "$@"
